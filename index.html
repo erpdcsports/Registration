@@ -4,30 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Student Registration | DC Sports Academy</title>
-  <meta name="description" content="Official student registration portal for DC Sports Academy training programs." />
+  <meta name="description" content="Apply for DC Sports Academy training programs — select your campus, sport, and training batch." />
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- CDNs -->
+  <!-- Supabase & Confetti CDNs -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
       --primary: #0A1E3C;
-      --accent: #1688ff;
-      --accent-hover: #0d74e7;
-      --success: #059669;
-      --danger: #dc2626;
-      --bg: #070e1b;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --input-bg: #f8fafc;
+      --blue-600: #2563eb;
+      --blue-500: #3b82f6;
+      --blue-50: #eff6ff;
+      --blue-100: #dbeafe;
+      --emerald-600: #059669;
+      --emerald-50: #ecfdf5;
+      --rose-500: #ef4444;
+      --rose-50: #fef2f2;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-700: #334155;
+      --slate-900: #0f172a;
     }
 
     * {
@@ -39,136 +45,196 @@
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at 50% 0%, #11254a 0%, var(--bg) 70%);
-      color: var(--text);
+      background: #f8fafc;
+      color: var(--slate-900);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px 40px;
+      padding: 0 0 40px;
     }
 
-    .wrapper {
+    /* App Bar Header */
+    .app-header {
       width: 100%;
-      max-width: 460px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #0a1e3c 0%, #1e3a8a 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--slate-900);
+      line-height: 1.15;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--blue-600);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn-header-app {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-100);
+      color: var(--blue-600);
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Main Container */
+    .main-wrap {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px 14px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* Minimal Header */
-    .brand-header {
-      text-align: center;
-      padding: 8px 0;
+    /* Section Cards (Matching App Style) */
+    .app-card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
     }
 
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(22, 136, 255, 0.12);
-      border: 1px solid rgba(22, 136, 255, 0.25);
-      color: #93c5fd;
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .brand-badge .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #10b981;
-    }
-
-    .brand-header h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #ffffff;
-      line-height: 1.2;
-    }
-
-    .brand-header p {
-      font-size: 13.5px;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
-
-    /* Clean Minimal Card */
-    .form-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 24px 20px;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-      margin: 16px 0 10px;
+    .card-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-    }
-
-    .section-label:first-child {
-      margin-top: 0;
-    }
-
-    .form-group {
+      gap: 8px;
       margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--slate-100);
     }
 
-    .form-label {
+    .card-icon-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .card-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--slate-900);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Inputs */
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
       display: block;
       font-size: 12px;
-      font-weight: 700;
-      color: #1e293b;
+      font-weight: 600;
+      color: var(--slate-700);
       margin-bottom: 5px;
     }
 
-    .form-label .required {
-      color: var(--danger);
+    .field-label .req {
+      color: var(--rose-500);
     }
 
-    .form-control {
-      width: 100%;
-      height: 44px;
-      background: var(--input-bg);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
+    .input-box {
+      display: flex;
+      align-items: center;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
       padding: 0 12px;
-      font-family: inherit;
-      font-size: 14px;
-      color: var(--text);
-      transition: all 0.2s ease;
+      height: 44px;
+      transition: all 0.2s;
     }
 
-    .form-control:focus {
-      outline: none;
+    .input-box:focus-within {
       background: #ffffff;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(22, 136, 255, 0.12);
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
-    select.form-control {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 14px;
-      padding-right: 36px;
+    .input-box .prefix {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--slate-500);
+      padding-right: 8px;
+      margin-right: 8px;
+      border-right: 1px solid var(--slate-200);
+    }
+
+    .input-box input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-900);
+      outline: none;
+      width: 100%;
+    }
+
+    .input-box input::placeholder {
+      color: var(--slate-400);
+    }
+
+    .btn-toggle-eye {
+      background: transparent;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-500);
+      cursor: pointer;
+      padding: 4px;
     }
 
     .row-two {
@@ -177,83 +243,256 @@
       gap: 10px;
     }
 
-    .password-wrapper {
-      position: relative;
-    }
-
-    .password-toggle {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 4px;
-    }
-
-    /* Duration Selector Pills */
-    .plan-selector {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    /* Chips for Academy Branch */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
       gap: 8px;
     }
 
-    .plan-pill {
-      border: 1.5px solid var(--border);
-      background: var(--input-bg);
-      border-radius: 10px;
+    .chip-btn {
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-700);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .chip-btn.active {
+      background: var(--blue-50);
+      border-color: var(--blue-600);
+      color: var(--blue-600);
+    }
+
+    /* Sport Horizontal Pills */
+    .sport-scroll-wrap {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .sport-scroll-wrap::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sport-pill {
+      white-space: nowrap;
+      padding: 7px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-700);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .sport-pill.active {
+      background: var(--blue-600);
+      border-color: var(--blue-600);
+      color: #ffffff;
+    }
+
+    /* Batch Selection Cards (Phone App Replica) */
+    .batch-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .batch-card {
+      border: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .batch-card.active {
+      background: rgba(239, 246, 255, 0.75);
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 1px var(--blue-600);
+    }
+
+    .batch-card.full {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .batch-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .batch-radio-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .radio-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--slate-300);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #ffffff;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .batch-card.active .radio-circle {
+      background: var(--blue-600);
+      border-color: var(--blue-600);
+    }
+
+    .batch-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--slate-900);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .batch-price {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue-600);
+      flex-shrink: 0;
+    }
+
+    .batch-full-badge {
+      background: var(--rose-50);
+      border: 1px solid #fecaca;
+      color: var(--rose-500);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 100px;
+    }
+
+    .batch-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(226, 232, 240, 0.7);
+      font-size: 10.5px;
+    }
+
+    .batch-schedule {
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+
+    .batch-time {
+      color: var(--slate-700);
+      font-weight: 600;
+    }
+
+    /* Duration Plan (1M vs 3M Cards) */
+    .duration-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .duration-card {
+      border: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      border-radius: 12px;
       padding: 10px 12px;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s;
+      position: relative;
+      transition: all 0.15s ease;
     }
 
-    .plan-pill.active {
-      border-color: var(--accent);
-      background: #eff6ff;
+    .duration-card.active {
+      background: var(--blue-50);
+      border-color: var(--blue-600);
     }
 
-    .plan-pill .title {
-      font-size: 13px;
+    .duration-card .d-title {
+      font-size: 12px;
       font-weight: 700;
-      color: #0f172a;
-      display: block;
+      color: var(--slate-700);
     }
 
-    .plan-pill .sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 1px;
-      display: block;
+    .duration-card.active .d-title {
+      color: var(--blue-600);
     }
 
-    /* Primary Submit Button */
+    .duration-card .d-price {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-top: 2px;
+    }
+
+    .badge-quarterly {
+      position: absolute;
+      top: -7px;
+      right: 6px;
+      background: var(--emerald-600);
+      color: #ffffff;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Submit Button */
     .btn-submit {
       width: 100%;
       height: 48px;
-      background: var(--accent);
-      border: none;
-      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue-600) 0%, #1d4ed8 100%);
       color: #ffffff;
+      border: none;
+      border-radius: 14px;
       font-family: inherit;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 16px;
-      box-shadow: 0 4px 14px rgba(22, 136, 255, 0.35);
-      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+      margin-top: 8px;
+      transition: all 0.15s;
     }
 
     .btn-submit:hover:not(:disabled) {
-      background: var(--accent-hover);
+      opacity: 0.95;
     }
 
     .btn-submit:disabled {
@@ -263,62 +502,65 @@
 
     /* Alert Banner */
     .alert-banner {
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 12px;
-      font-size: 12.5px;
-      margin-bottom: 14px;
+      font-size: 12px;
+      font-weight: 500;
       display: none;
       align-items: center;
-      gap: 8px;
-      line-height: 1.4;
+      gap: 6px;
+      margin-bottom: 12px;
     }
 
     .alert-banner.error {
-      background: #fef2f2;
+      background: var(--rose-50);
       border: 1px solid #fecaca;
-      color: var(--danger);
+      color: var(--rose-500);
     }
 
-    /* Success State View */
-    .success-box {
+    /* Success Card View */
+    .success-container {
       display: none;
       text-align: center;
-      padding: 16px 8px;
+      padding: 24px 16px;
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 20px;
     }
 
-    .success-icon {
-      width: 56px;
-      height: 56px;
+    .success-icon-badge {
+      width: 60px;
+      height: 60px;
+      background: var(--emerald-50);
+      border: 2px solid #a7f3d0;
+      color: var(--emerald-600);
       border-radius: 50%;
-      background: #ecfdf5;
-      color: var(--success);
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 12px;
-      border: 2px solid #a7f3d0;
     }
 
-    .success-box h2 {
+    .success-container h2 {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 20px;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 6px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin-bottom: 4px;
     }
 
-    .success-box p {
+    .success-container p {
       font-size: 13px;
-      color: var(--text-muted);
+      color: var(--slate-500);
       line-height: 1.5;
       margin-bottom: 16px;
     }
 
-    .badge-summary {
-      background: var(--input-bg);
-      border: 1px solid var(--border);
+    .success-info-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
       border-radius: 12px;
       padding: 12px 14px;
       text-align: left;
@@ -326,54 +568,49 @@
       margin-bottom: 16px;
     }
 
-    .badge-summary div {
+    .success-info-box .info-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
-    .badge-summary div:last-child {
+    .success-info-box .info-row:last-child {
       margin-bottom: 0;
     }
 
-    .badge-summary span {
-      color: var(--text-muted);
+    .success-info-box .info-row span {
+      color: var(--slate-500);
     }
 
-    .badge-summary strong {
-      color: #0f172a;
+    .success-info-box .info-row strong {
+      color: var(--slate-900);
     }
 
-    .btn-app {
-      background: linear-gradient(135deg, var(--success), #047857);
+    .btn-download-app {
+      background: linear-gradient(135deg, var(--emerald-600), #047857);
       color: #ffffff;
       text-decoration: none;
-      height: 44px;
-      border-radius: 10px;
+      height: 46px;
+      border-radius: 12px;
       font-size: 13.5px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
     }
 
-    /* Minimal Footer */
     footer {
       text-align: center;
       font-size: 11.5px;
-      color: #64748b;
-      margin-top: 8px;
+      color: var(--slate-400);
+      margin-top: 14px;
     }
 
     footer a {
-      color: #93c5fd;
+      color: var(--blue-600);
       text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
     }
 
     .spinner {
@@ -392,135 +629,176 @@
 </head>
 <body>
 
-  <div class="wrapper">
-    
-    <!-- Clean Minimal Header -->
-    <header class="brand-header">
-      <div class="brand-badge">
-        <span class="dot"></span> DC SPORTS ACADEMY
+  <!-- Top App Bar -->
+  <header class="app-header">
+    <div class="brand-group">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div class="brand-title">DC SPORTS</div>
+        <div class="brand-sub">Academy Admission</div>
       </div>
-      <h1>Student Registration</h1>
-      <p>Fill out the form below to register for coaching batches.</p>
-    </header>
+    </div>
+    <a href="https://play.google.com/store/apps/details?id=com.rishabj21.dcsportsacademy" target="_blank" class="btn-header-app">
+      <span>📲</span> Get App
+    </a>
+  </header>
 
-    <!-- Form Card -->
-    <main class="form-card">
-      
-      <div id="alertBox" class="alert-banner"></div>
+  <main class="main-wrap">
 
-      <!-- Application Form -->
-      <form id="regForm" onsubmit="handleRegistration(event)">
-        
-        <!-- Section: Student Info -->
-        <div class="section-label">1. Student Details</div>
+    <div id="alertBox" class="alert-banner"></div>
 
-        <div class="form-group">
-          <label class="form-label">Full Name <span class="required">*</span></label>
-          <input type="text" id="studentName" class="form-control" placeholder="Enter student name" required minlength="2" />
+    <form id="admissionForm" onsubmit="handleRegistrationSubmit(event)">
+
+      <!-- SECTION 1: STUDENT DETAILS -->
+      <section class="app-card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <div class="card-icon-badge" style="background: var(--blue-50); color: var(--blue-600);">👤</div>
+          <div class="card-title">1. Student Details</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Student Full Name <span class="req">*</span></label>
+          <div class="input-box">
+            <input type="text" id="inpName" placeholder="Enter student's full name" required minlength="2" />
+          </div>
         </div>
 
         <div class="row-two">
-          <div class="form-group">
-            <label class="form-label">Mobile Number <span class="required">*</span></label>
-            <input type="tel" id="studentPhone" class="form-control" placeholder="10-digit number" required pattern="[0-9]{10}" maxlength="10" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" id="studentDob" class="form-control" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Create App Password <span class="required">*</span></label>
-          <div class="password-wrapper">
-            <input type="password" id="studentPassword" class="form-control" placeholder="Minimum 6 characters" required minlength="6" />
-            <button type="button" class="password-toggle" onclick="togglePassword()">SHOW</button>
-          </div>
-        </div>
-
-        <!-- Section: Batch Selection -->
-        <div class="section-label">2. Academy & Batch</div>
-
-        <div class="form-group">
-          <label class="form-label">Campus Branch <span class="required">*</span></label>
-          <select id="selectAcademy" class="form-control" required onchange="onAcademyChange()">
-            <option value="">Loading branches...</option>
-          </select>
-        </div>
-
-        <div class="row-two">
-          <div class="form-group">
-            <label class="form-label">Sport <span class="required">*</span></label>
-            <select id="selectSport" class="form-control" required onchange="onSportChange()">
-              <option value="">Select sport...</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Batch Timing <span class="required">*</span></label>
-            <select id="selectBatch" class="form-control" required onchange="onBatchChange()">
-              <option value="">Select batch...</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Fee Plan</label>
-          <div class="plan-selector">
-            <div class="plan-pill active" id="pill1m" onclick="setPlan(1)">
-              <span class="title">Monthly</span>
-              <span class="sub" id="sub1m">Standard</span>
+          <div class="field-group">
+            <label class="field-label">Mobile Number <span class="req">*</span></label>
+            <div class="input-box">
+              <span class="prefix">+91</span>
+              <input type="tel" id="inpPhone" placeholder="9876543210" required pattern="[0-9]{10}" maxlength="10" />
             </div>
-            <div class="plan-pill" id="pill3m" onclick="setPlan(3)">
-              <span class="title">Quarterly (3M)</span>
-              <span class="sub" id="sub3m">Discounted</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Date of Birth</label>
+            <div class="input-box">
+              <input type="date" id="inpDob" />
             </div>
           </div>
         </div>
 
-        <!-- Section: Guardian / Emergency -->
-        <div class="section-label">3. Emergency Contact</div>
+        <div class="field-group">
+          <label class="field-label">Set Login Password <span class="req">*</span></label>
+          <div class="input-box">
+            <input type="password" id="inpPassword" placeholder="Minimum 6 characters" required minlength="6" />
+            <button type="button" class="btn-toggle-eye" onclick="togglePassVisibility()">SHOW</button>
+          </div>
+          <div style="font-size: 10px; color: var(--slate-400); margin-top: 3px;">
+            Use this password with your mobile number to sign in on the app.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2: PARENT / GUARDIAN DETAILS -->
+      <section class="app-card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <div class="card-icon-badge" style="background: var(--emerald-50); color: var(--emerald-600);">🛡️</div>
+          <div class="card-title">2. Parent / Guardian Details</div>
+        </div>
 
         <div class="row-two">
-          <div class="form-group">
-            <label class="form-label">Parent / Guardian</label>
-            <input type="text" id="guardianName" class="form-control" placeholder="Guardian name" />
+          <div class="field-group">
+            <label class="field-label">Guardian Name</label>
+            <div class="input-box">
+              <input type="text" id="inpGuardian" placeholder="Father or Mother" />
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Emergency Phone</label>
-            <input type="tel" id="emergencyPhone" class="form-control" placeholder="10 digits" pattern="[0-9]{10}" maxlength="10" />
+          <div class="field-group">
+            <label class="field-label">Emergency Mobile</label>
+            <div class="input-box">
+              <span class="prefix">+91</span>
+              <input type="tel" id="inpEmergencyPhone" placeholder="Optional" pattern="[0-9]{10}" maxlength="10" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: PROGRAM & BATCH SELECTION (PHONE APP REPLICA) -->
+      <section class="app-card" style="margin-bottom: 12px;">
+        <div class="card-header">
+          <div class="card-icon-badge" style="background: #faf5ff; color: #7c3aed;">🏆</div>
+          <div class="card-title">3. Program & Batch Selection</div>
+        </div>
+
+        <!-- 3A. Academy Branch Selector (Pill Chips) -->
+        <div class="field-group">
+          <label class="field-label">Select Academy Branch <span class="req">*</span></label>
+          <div class="chip-group" id="academyChipContainer">
+            <div style="font-size: 12px; color: var(--slate-400);">Loading branches...</div>
           </div>
         </div>
 
-        <button type="submit" id="btnSubmit" class="btn-submit">
-          <span>Submit Registration</span>
-        </button>
-      </form>
-
-      <!-- Clean Success View -->
-      <div id="successBox" class="success-box">
-        <div class="success-icon">✓</div>
-        <h2>Application Submitted!</h2>
-        <p>Your registration is received. The academy team will verify your admission and assign your schedule.</p>
-        
-        <div class="badge-summary">
-          <div><span>Student Name:</span> <strong id="resName">-</strong></div>
-          <div><span>Registered Mobile:</span> <strong id="resPhone">-</strong></div>
-          <div><span>Assigned ID:</span> <strong id="resId">-</strong></div>
+        <!-- 3B. Sport Filter (Horizontal Scroll Pills) -->
+        <div class="field-group" id="sportSection" style="display: none;">
+          <label class="field-label">Select Sport</label>
+          <div class="sport-scroll-wrap" id="sportPillContainer"></div>
         </div>
 
-        <a href="https://play.google.com/store/apps/details?id=com.rishabj21.dcsportsacademy" target="_blank" class="btn-app">
-          <span>📲 Download DC Sports App</span>
-        </a>
+        <!-- 3C. Choose Training Batch (Batch Cards with Schedule & Price) -->
+        <div class="field-group">
+          <label class="field-label">Choose Training Batch <span class="req">*</span></label>
+          <div class="batch-list" id="batchCardsContainer">
+            <div style="font-size: 12px; color: var(--slate-400);">Select a branch to see available batches.</div>
+          </div>
+        </div>
+
+        <!-- 3D. Billing Duration Plan (1M vs 3M Cards) -->
+        <div class="field-group" id="durationSection" style="display: none; padding-top: 8px; border-top: 1px solid var(--slate-100);">
+          <label class="field-label">Billing Duration Plan</label>
+          <div class="duration-grid">
+            <div class="duration-card active" id="card1m" onclick="selectDuration(1)">
+              <div class="d-title">1 Month Plan</div>
+              <div class="d-price" id="labelPrice1m">₹3,000</div>
+            </div>
+            <div class="duration-card" id="card3m" onclick="selectDuration(3)">
+              <div class="badge-quarterly">Quarterly</div>
+              <div class="d-title">3 Months Plan</div>
+              <div class="d-price" id="labelPrice3m">₹8,000</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Action Button -->
+      <button type="submit" id="btnSubmitForm" class="btn-submit">
+        <span>Submit Admission Application</span>
+      </button>
+
+    </form>
+
+    <!-- SUCCESS SCREEN -->
+    <div id="successBox" class="success-container">
+      <div class="success-icon-badge">✓</div>
+      <h2>Application Submitted!</h2>
+      <p>Your admission request is received. Our academy coach will review your request and confirm your batch schedule.</p>
+
+      <div class="success-info-box">
+        <div class="info-row">
+          <span>Student Name:</span>
+          <strong id="sucName">-</strong>
+        </div>
+        <div class="info-row">
+          <span>Registered Mobile:</span>
+          <strong id="sucPhone">-</strong>
+        </div>
+        <div class="info-row">
+          <span>Assigned Student ID:</span>
+          <strong id="sucId">-</strong>
+        </div>
       </div>
 
-    </main>
+      <a href="https://play.google.com/store/apps/details?id=com.rishabj21.dcsportsacademy" target="_blank" class="btn-download-app">
+        <span>📲 Download DC Sports Mobile App</span>
+      </a>
+    </div>
 
-    <!-- Minimal Footer -->
     <footer>
       <p>&copy; 2026 DC Sports Academy &bull; <a href="https://rishabjuyal.github.io/DC-sports-privacy-policy/" target="_blank">Privacy Policy</a></p>
     </footer>
 
-  </div>
+  </main>
 
   <script>
     // Supabase Initialization
@@ -528,138 +806,266 @@
     const SUPABASE_KEY = 'sb_publishable_RKjU6rRx5UPuxzuW0uEa0g_r_iHFEW5';
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let cachedAcademies = [];
-    let cachedSports = [];
-    let cachedBatches = [];
-    let planMonths = 1;
+    let allAcademies = [];
+    let allSports = [];
+    let allBatches = [];
+    let batchCapacity = {};
+
+    let selectedAcademyId = '';
+    let selectedSportId = '';
+    let selectedBatchId = '';
+    let planDuration = 1;
 
     document.addEventListener('DOMContentLoaded', async () => {
       await loadMetadata();
     });
 
+    // 1. Load Data from Supabase
     async function loadMetadata() {
       try {
-        const [acadRes, sportRes, batchRes] = await Promise.all([
+        const [acadRes, sportRes, batchRes, enrRes] = await Promise.all([
           db.from('academies').select('id, name, address, code').eq('active', true).order('name'),
-          db.from('sports').select('id, name').eq('active', true).order('name'),
-          db.from('batches').select('id, academy_id, sport_id, name, time_start, time_end, fee_amount, fee_amount_3m, max_capacity, active').eq('active', true).order('time_start')
+          db.from('sports').select('id, name, icon, code').eq('active', true).order('name'),
+          db.from('batches').select('id, academy_id, sport_id, name, schedule, time_start, time_end, fee_amount, fee_amount_3m, max_capacity, active').eq('active', true).order('time_start'),
+          db.from('enrollments').select('batch_id').eq('active', true)
         ]);
 
         if (acadRes.error) throw acadRes.error;
         if (sportRes.error) throw sportRes.error;
         if (batchRes.error) throw batchRes.error;
 
-        cachedAcademies = acadRes.data || [];
-        cachedSports = sportRes.data || [];
-        cachedBatches = batchRes.data || [];
+        allAcademies = acadRes.data || [];
+        allSports = sportRes.data || [];
+        allBatches = batchRes.data || [];
 
-        const acadSelect = document.getElementById('selectAcademy');
-        acadSelect.innerHTML = '<option value="">-- Select Campus --</option>';
-        cachedAcademies.forEach(a => {
-          const opt = document.createElement('option');
-          opt.value = a.id;
-          opt.textContent = a.name;
-          acadSelect.appendChild(opt);
+        // Build capacity map
+        const enrollments = enrRes.data || [];
+        allBatches.forEach(b => {
+          const max = Number(b.max_capacity) || 30;
+          batchCapacity[b.id] = { enrolled: 0, max, isFull: false };
+        });
+        enrollments.forEach(e => {
+          if (batchCapacity[e.batch_id]) {
+            batchCapacity[e.batch_id].enrolled += 1;
+            if (batchCapacity[e.batch_id].enrolled >= batchCapacity[e.batch_id].max) {
+              batchCapacity[e.batch_id].isFull = true;
+            }
+          }
         });
 
-        if (cachedAcademies.length === 1) {
-          acadSelect.value = cachedAcademies[0].id;
-          onAcademyChange();
-        }
-      } catch (e) {
-        console.error('Metadata load error:', e);
-        showAlert(e.message || 'Could not load academy schedule. Please refresh.', 'error');
+        renderAcademies();
+      } catch (err) {
+        console.error('Metadata load error:', err);
+        showAlert('Could not load academy schedule. Please refresh the page.', 'error');
       }
     }
 
-    function onAcademyChange() {
-      const sportSelect = document.getElementById('selectSport');
-      sportSelect.innerHTML = '<option value="">-- Select Sport --</option>';
-      cachedSports.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.textContent = s.name;
-        sportSelect.appendChild(opt);
-      });
-      onSportChange();
-    }
+    // 2. Render Academy Chips
+    function renderAcademies() {
+      const container = document.getElementById('academyChipContainer');
+      container.innerHTML = '';
 
-    function onSportChange() {
-      const academyId = document.getElementById('selectAcademy').value;
-      const sportId = document.getElementById('selectSport').value;
-      const batchSelect = document.getElementById('selectBatch');
-
-      batchSelect.innerHTML = '<option value="">-- Select Batch --</option>';
-      if (!academyId || !sportId) return;
-
-      const filtered = cachedBatches.filter(b => b.academy_id === academyId && b.sport_id === sportId);
-      if (filtered.length === 0) {
-        batchSelect.innerHTML = '<option value="">No batches active</option>';
+      if (allAcademies.length === 0) {
+        container.innerHTML = '<div style="font-size: 12px; color: var(--slate-400);">No branches found.</div>';
         return;
       }
 
-      filtered.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b.id;
-        const timing = `${b.time_start || ''} - ${b.time_end || ''}`.trim();
-        opt.textContent = `${b.name} (${timing || 'Regular'})`;
-        batchSelect.appendChild(opt);
+      allAcademies.forEach((acad, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip-btn' + (idx === 0 ? ' active' : '');
+        btn.innerHTML = `<span>📍</span> <span>${acad.name}</span>`;
+        btn.onclick = () => selectAcademy(acad.id, btn);
+        container.appendChild(btn);
       });
 
-      if (filtered.length > 0) {
-        batchSelect.value = filtered[0].id;
-        onBatchChange();
+      // Default select the first academy branch
+      selectedAcademyId = allAcademies[0].id;
+      renderSports();
+      renderBatches();
+    }
+
+    function selectAcademy(id, btnElement) {
+      selectedAcademyId = id;
+      selectedSportId = '';
+      selectedBatchId = '';
+
+      document.querySelectorAll('#academyChipContainer .chip-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      renderSports();
+      renderBatches();
+    }
+
+    // 3. Render Sport Horizontal Pills
+    function renderSports() {
+      const sec = document.getElementById('sportSection');
+      const container = document.getElementById('sportPillContainer');
+      container.innerHTML = '';
+
+      if (!selectedAcademyId || allSports.length === 0) {
+        sec.style.display = 'none';
+        return;
+      }
+      sec.style.display = 'block';
+
+      // 'All Sports' Pill
+      const allPill = document.createElement('button');
+      allPill.type = 'button';
+      allPill.className = 'sport-pill active';
+      allPill.innerHTML = `<span>🏅</span> <span>All Sports</span>`;
+      allPill.onclick = () => selectSport('', allPill);
+      container.appendChild(allPill);
+
+      allSports.forEach(sport => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'sport-pill';
+        pill.innerHTML = `<span>${sport.icon || '🏅'}</span> <span>${sport.name}</span>`;
+        pill.onclick = () => selectSport(sport.id, pill);
+        container.appendChild(pill);
+      });
+    }
+
+    function selectSport(id, pillElement) {
+      selectedSportId = id;
+      selectedBatchId = '';
+
+      document.querySelectorAll('#sportPillContainer .sport-pill').forEach(p => p.classList.remove('active'));
+      pillElement.classList.add('active');
+
+      renderBatches();
+    }
+
+    // 4. Render Batch Cards (Exact Phone App Card Layout)
+    function renderBatches() {
+      const container = document.getElementById('batchCardsContainer');
+      const durationSec = document.getElementById('durationSection');
+      container.innerHTML = '';
+
+      if (!selectedAcademyId) {
+        container.innerHTML = '<div style="font-size: 12px; color: var(--slate-400);">Please select a branch first.</div>';
+        durationSec.style.display = 'none';
+        return;
+      }
+
+      let filtered = allBatches.filter(b => b.academy_id === selectedAcademyId);
+      if (selectedSportId) {
+        filtered = filtered.filter(b => b.sport_id === selectedSportId);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="font-size: 12px; color: var(--slate-500); padding: 12px; text-align: center; background: var(--slate-50); border: 1px dashed var(--slate-200); border-radius: 12px;">No active batches found for this selection.</div>';
+        durationSec.style.display = 'none';
+        return;
+      }
+
+      filtered.forEach((batch, idx) => {
+        const cap = batchCapacity[batch.id];
+        const isFull = cap ? cap.isFull : false;
+        const fee1m = Number(batch.fee_amount || 3000);
+
+        const card = document.createElement('div');
+        card.className = `batch-card ${isFull ? 'full' : ''}`;
+        card.id = `batch-${batch.id}`;
+
+        card.innerHTML = `
+          <div class="batch-card-top">
+            <div class="batch-radio-title">
+              <div class="radio-circle">✓</div>
+              <div class="batch-name">${batch.name}</div>
+            </div>
+            ${isFull 
+              ? '<span class="batch-full-badge">FULL</span>' 
+              : `<span class="batch-price">₹${fee1m.toLocaleString('en-IN')}/mo</span>`
+            }
+          </div>
+          <div class="batch-card-bottom">
+            <span class="batch-schedule">📅 ${batch.schedule || 'Regular'}</span>
+            <span class="batch-time">⏰ ${batch.time_start || ''} - ${batch.time_end || ''}</span>
+          </div>
+        `;
+
+        if (!isFull) {
+          card.onclick = () => selectBatch(batch.id);
+        }
+
+        container.appendChild(card);
+      });
+
+      // Auto-select first available batch
+      const firstAvailable = filtered.find(b => !batchCapacity[b.id]?.isFull);
+      if (firstAvailable) {
+        selectBatch(firstAvailable.id);
+      } else {
+        durationSec.style.display = 'none';
       }
     }
 
-    function onBatchChange() {
-      const batchId = document.getElementById('selectBatch').value;
-      const batch = cachedBatches.find(b => b.id === batchId);
-      const sub1m = document.getElementById('sub1m');
-      const sub3m = document.getElementById('sub3m');
+    function selectBatch(id) {
+      selectedBatchId = id;
+      document.querySelectorAll('#batchCardsContainer .batch-card').forEach(c => c.classList.remove('active'));
+      
+      const el = document.getElementById(`batch-${id}`);
+      if (el) el.classList.add('active');
 
-      if (!batch) return;
+      // Update 1M vs 3M prices for selected batch
+      const batch = allBatches.find(b => b.id === id);
+      const durationSec = document.getElementById('durationSection');
 
-      const f1 = batch.fee_amount ? `₹${Number(batch.fee_amount).toLocaleString('en-IN')}` : '₹3,000';
-      const f3 = batch.fee_amount_3m ? `₹${Number(batch.fee_amount_3m).toLocaleString('en-IN')}` : (batch.fee_amount ? `₹${(Number(batch.fee_amount) * 3 * 0.9).toFixed(0)}` : '₹8,000');
+      if (batch) {
+        durationSec.style.display = 'block';
+        const fee1m = Number(batch.fee_amount || 3000);
+        const fee3m = batch.fee_amount_3m != null && Number(batch.fee_amount_3m) > 0
+          ? Number(batch.fee_amount_3m)
+          : Math.round(fee1m * 3 * 0.9);
 
-      sub1m.textContent = `${f1}/mo`;
-      sub3m.textContent = `${f3}/3mo`;
+        document.getElementById('labelPrice1m').textContent = `₹${fee1m.toLocaleString('en-IN')}`;
+        document.getElementById('labelPrice3m').textContent = `₹${fee3m.toLocaleString('en-IN')}`;
+      } else {
+        durationSec.style.display = 'none';
+      }
     }
 
-    function setPlan(months) {
-      planMonths = months;
-      document.getElementById('pill1m').classList.toggle('active', months === 1);
-      document.getElementById('pill3m').classList.toggle('active', months === 3);
+    function selectDuration(months) {
+      planDuration = months;
+      document.getElementById('card1m').classList.toggle('active', months === 1);
+      document.getElementById('card3m').classList.toggle('active', months === 3);
     }
 
-    function togglePassword() {
-      const pass = document.getElementById('studentPassword');
+    function togglePassVisibility() {
+      const inp = document.getElementById('inpPassword');
       const btn = event.target;
-      if (pass.type === 'password') {
-        pass.type = 'text';
+      if (inp.type === 'password') {
+        inp.type = 'text';
         btn.textContent = 'HIDE';
       } else {
-        pass.type = 'password';
+        inp.type = 'password';
         btn.textContent = 'SHOW';
       }
     }
 
-    async function handleRegistration(e) {
+    // 5. Handle Form Submit
+    async function handleRegistrationSubmit(e) {
       e.preventDefault();
       hideAlert();
 
-      const btn = document.getElementById('btnSubmit');
-      const name = document.getElementById('studentName').value.trim();
-      const phone = document.getElementById('studentPhone').value.trim().replace(/\D/g, '');
-      const dob = document.getElementById('studentDob').value || null;
-      const password = document.getElementById('studentPassword').value.trim();
-      const academyId = document.getElementById('selectAcademy').value;
-      const sportId = document.getElementById('selectSport').value;
-      const batchId = document.getElementById('selectBatch').value;
-      const guardian = document.getElementById('guardianName').value.trim();
-      const emergencyPhone = document.getElementById('emergencyPhone').value.trim().replace(/\D/g, '');
+      const btn = document.getElementById('btnSubmitForm');
+      const name = document.getElementById('inpName').value.trim();
+      const phone = document.getElementById('inpPhone').value.trim().replace(/\D/g, '');
+      const dob = document.getElementById('inpDob').value || null;
+      const password = document.getElementById('inpPassword').value.trim();
+      const guardian = document.getElementById('inpGuardian').value.trim();
+      const emergencyPhone = document.getElementById('inpEmergencyPhone').value.trim().replace(/\D/g, '');
 
+      if (!selectedAcademyId) {
+        showAlert('Please select your preferred academy branch.', 'error');
+        return;
+      }
+      if (!selectedBatchId) {
+        showAlert('Please select a training batch.', 'error');
+        return;
+      }
       if (phone.length < 10) {
         showAlert('Please enter a valid 10-digit mobile number.', 'error');
         return;
@@ -670,30 +1076,38 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> <span>Submitting...</span>';
+      btn.innerHTML = '<span class="spinner"></span> <span>Submitting Application...</span>';
+
+      const selectedBatch = allBatches.find(b => b.id === selectedBatchId);
+      const sportId = selectedSportId || (selectedBatch ? selectedBatch.sport_id : '');
 
       try {
         let result = null;
 
-        // Try atomic RPC first
+        // Attempt 1: Call atomic register_student_public RPC
         try {
           const { data: rpcData, error: rpcErr } = await db.rpc('register_student_public', {
             p_name: name,
             p_phone: phone,
             p_email: `student_${phone}@dcsports.in`,
             p_password: password,
-            p_academy_id: academyId,
+            p_academy_id: selectedAcademyId,
             p_sport_id: sportId,
-            p_batch_id: batchId,
+            p_batch_id: selectedBatchId,
             p_date_of_birth: dob,
             p_emergency_contact: guardian,
             p_emergency_phone: emergencyPhone || phone,
-            p_plan_duration_months: planMonths
+            p_plan_duration_months: planDuration
           });
-          if (!rpcErr && rpcData) result = rpcData;
-        } catch (ex) {}
 
-        // Fallback direct insert if RPC not created yet
+          if (!rpcErr && rpcData) {
+            result = rpcData;
+          }
+        } catch (ex) {
+          console.warn('RPC register_student_public error, using fallback:', ex);
+        }
+
+        // Attempt 2: Direct fallback insert if RPC not deployed yet
         if (!result || result.success === false) {
           if (result && result.error && !result.error.includes('function') && !result.error.includes('does not exist')) {
             throw new Error(result.error);
@@ -701,7 +1115,7 @@
 
           const { data: existing } = await db.from('users').select('id').eq('phone', phone).maybeSingle();
           if (existing) {
-            throw new Error(`Mobile number "${phone}" is already registered.`);
+            throw new Error(`Mobile number "${phone}" is already registered. Please login on the mobile app.`);
           }
 
           const userId = `usr-stud-${Date.now()}`;
@@ -712,7 +1126,7 @@
             phone: phone,
             role: 'student',
             initial_password: password,
-            academy_id: academyId,
+            academy_id: selectedAcademyId,
             date_of_birth: dob,
             emergency_contact: guardian,
             emergency_phone: emergencyPhone || phone,
@@ -724,10 +1138,10 @@
           await db.from('enrollment_requests').insert({
             id: reqId,
             student_id: userId,
-            academy_id: academyId,
+            academy_id: selectedAcademyId,
             sport_id: sportId,
-            batch_id: batchId,
-            plan_duration_months: planMonths,
+            batch_id: selectedBatchId,
+            plan_duration_months: planDuration,
             status: 'pending',
             requested_at: new Date().toISOString()
           });
@@ -735,25 +1149,27 @@
           result = { success: true, user_id: userId, name: name, phone: phone };
         }
 
-        // Trigger confetti
+        // Trigger confetti 🎉
         if (window.confetti) {
-          window.confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+          window.confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
         }
 
         // Show Success Box
-        document.getElementById('regForm').style.display = 'none';
+        document.getElementById('admissionForm').style.display = 'none';
         const sBox = document.getElementById('successBox');
         sBox.style.display = 'block';
 
-        document.getElementById('resName').textContent = name;
-        document.getElementById('resPhone').textContent = phone;
-        document.getElementById('resId').textContent = result.user_id || 'Assigned';
+        document.getElementById('sucName').textContent = name;
+        document.getElementById('sucPhone').textContent = phone;
+        document.getElementById('sucId').textContent = result.user_id || 'Assigned';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
       } catch (err) {
         showAlert(err.message || 'Registration failed. Please try again.', 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span>Submit Registration</span>';
+        btn.innerHTML = '<span>Submit Admission Application</span>';
       }
     }
 
@@ -762,6 +1178,7 @@
       box.className = `alert-banner ${type}`;
       box.textContent = msg;
       box.style.display = 'flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function hideAlert() {
