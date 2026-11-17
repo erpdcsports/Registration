@@ -540,10 +540,14 @@
     async function loadMetadata() {
       try {
         const [acadRes, sportRes, batchRes] = await Promise.all([
-          db.from('academies').select('id, name, city').order('name'),
-          db.from('sports').select('id, name').order('name'),
-          db.from('batches').select('id, academy_id, sport_id, name, time_start, time_end, fee_amount, fee_amount_3m, max_capacity, active').eq('active', true).order('name')
+          db.from('academies').select('id, name, address, code').eq('active', true).order('name'),
+          db.from('sports').select('id, name').eq('active', true).order('name'),
+          db.from('batches').select('id, academy_id, sport_id, name, time_start, time_end, fee_amount, fee_amount_3m, max_capacity, active').eq('active', true).order('time_start')
         ]);
+
+        if (acadRes.error) throw acadRes.error;
+        if (sportRes.error) throw sportRes.error;
+        if (batchRes.error) throw batchRes.error;
 
         cachedAcademies = acadRes.data || [];
         cachedSports = sportRes.data || [];
@@ -554,7 +558,7 @@
         cachedAcademies.forEach(a => {
           const opt = document.createElement('option');
           opt.value = a.id;
-          opt.textContent = `${a.name} (${a.city || 'Campus'})`;
+          opt.textContent = a.name;
           acadSelect.appendChild(opt);
         });
 
@@ -563,7 +567,8 @@
           onAcademyChange();
         }
       } catch (e) {
-        showAlert('Could not load academy schedule. Please refresh.', 'error');
+        console.error('Metadata load error:', e);
+        showAlert(e.message || 'Could not load academy schedule. Please refresh.', 'error');
       }
     }
 
