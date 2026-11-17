@@ -6,10 +6,10 @@
   <title>Student Registration | DC Sports Academy</title>
   <meta name="description" content="Apply for DC Sports Academy training programs — select your campus, sport, and training batch." />
   
-  <!-- Fonts -->
+  <!-- Fonts (DM Sans - Official DC Sports App Font) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400;1,9..40,500&display=swap" rel="stylesheet" />
 
   <!-- Supabase & Confetti CDNs -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -44,7 +44,7 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #f8fafc;
       color: var(--slate-900);
       min-height: 100vh;
@@ -74,21 +74,43 @@
       gap: 10px;
     }
 
-    .brand-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, #0a1e3c 0%, #1e3a8a 100%);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
+    .brand-logo-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    .hero-brand-section {
+      text-align: center;
+      padding: 10px 0 6px;
+    }
+
+    .hero-logo-main {
+      width: 84px;
+      height: 84px;
+      object-fit: contain;
+      margin: 0 auto 8px;
+      display: block;
+      filter: drop-shadow(0 6px 14px rgba(10, 30, 60, 0.12));
+    }
+
+    .hero-brand-title {
+      font-size: 20px;
       font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.02em;
+    }
+
+    .hero-brand-tagline {
+      font-size: 12.5px;
+      color: var(--slate-500);
+      font-weight: 500;
+      margin-top: 3px;
     }
 
     .brand-title {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 15px;
       font-weight: 800;
       color: var(--slate-900);
@@ -544,7 +566,7 @@
     }
 
     .success-container h2 {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 20px;
       font-weight: 800;
       color: var(--slate-900);
@@ -632,7 +654,7 @@
   <!-- Top App Bar -->
   <header class="app-header">
     <div class="brand-group">
-      <div class="brand-icon">⚡</div>
+      <img src="logo.png" alt="DC Sports Logo" class="brand-logo-img" />
       <div>
         <div class="brand-title">DC SPORTS</div>
         <div class="brand-sub">Academy Admission</div>
@@ -644,6 +666,13 @@
   </header>
 
   <main class="main-wrap">
+
+    <!-- Hero Brand Section with Official DC Sports Logo -->
+    <div class="hero-brand-section">
+      <img src="logo.png" alt="DC Sports Academy" class="hero-logo-main" />
+      <h1 class="hero-brand-title">DC Sports Academy</h1>
+      <p class="hero-brand-tagline">Student Registration & Batch Enrollment</p>
+    </div>
 
     <div id="alertBox" class="alert-banner"></div>
 
